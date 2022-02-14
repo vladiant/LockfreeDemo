@@ -33,7 +33,7 @@ constexpr std::chrono::seconds runtime(5);
 using Buffer = lockfree::ExchangeBuffer<uint64_t, NUM_THREADS + 1>;
 
 void try_write(Buffer &buffer, std::atomic<bool> &run, int id, uint64_t &max) {
-  max;
+  static_cast<void>(id);
   while (run) {
     // write and increase max value written if successful
     if (buffer.try_write(max + 1)) {
@@ -44,6 +44,7 @@ void try_write(Buffer &buffer, std::atomic<bool> &run, int id, uint64_t &max) {
 }
 
 void take(Buffer &buffer, std::atomic<bool> &run, int id, uint64_t &sum) {
+  static_cast<void>(id);
   sum = 0;
   while (run) {
     // add value to local sum if it is successfully taken from buffer
@@ -115,6 +116,7 @@ TEST_CASE("using_try_write_and_take_we_lose_no_data", "ExchangeBufferStressTest"
 }
 
 void write1(Buffer &buffer, std::atomic<bool> &run, int id, uint64_t &max) {
+  static_cast<void>(id);
   max = 0;
   while (run) {
     // write and increase max value written if successful
@@ -127,6 +129,7 @@ void write1(Buffer &buffer, std::atomic<bool> &run, int id, uint64_t &max) {
 
 void read1(Buffer &buffer, std::atomic<bool> &run, int id, int &ordered,
            uint64_t &max) {
+  static_cast<void>(id);
   ordered = 1;
   uint64_t prevValue = 0;
   max = 0;
@@ -212,7 +215,7 @@ using DataBuffer = lockfree::ExchangeBuffer<Data, NUM_THREADS + 1>;
 
 void write2(DataBuffer &buffer, std::atomic<bool> &run, int id, uint64_t &max) {
   max = 0;
-  Data data{.id = id, .value = 1};
+  Data data{id, 1};
   // data.id = id;
   while (run) {
     // write and increase max value written if successful
@@ -226,6 +229,7 @@ void write2(DataBuffer &buffer, std::atomic<bool> &run, int id, uint64_t &max) {
 
 void read2(DataBuffer &buffer, std::atomic<bool> &run, int id, int &ordered,
            uint64_t &max) {
+  static_cast<void>(id);
   ordered = 1;
   max = 0; // could do this also on a per writer basis to evaluate by the test
            // later

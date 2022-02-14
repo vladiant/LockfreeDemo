@@ -151,7 +151,7 @@ template <typename Buffer> void write_read() {
   }
 }
 
-int main(int argc, char **argv) {
+int main(int, char **) {
   cas_semantics();
   end_case();
 

@@ -17,7 +17,7 @@ constexpr std::chrono::seconds runtime(2);
 
 using SyncCounter = lockfree::SyncCounter;
 
-void increment(SyncCounter &counter, std::atomic<bool> &run, int id,
+void increment(SyncCounter &counter, std::atomic<bool> &run, int,
                uint64_t &numIncs) {
   numIncs = 0;
   while (run) {
@@ -28,7 +28,7 @@ void increment(SyncCounter &counter, std::atomic<bool> &run, int id,
   }
 }
 
-void read(SyncCounter &counter, std::atomic<bool> &run, int id, uint64_t &max) {
+void read(SyncCounter &counter, std::atomic<bool> &run, int, uint64_t &max) {
   max = 0;
   while (run) {
     auto value = counter.sync();

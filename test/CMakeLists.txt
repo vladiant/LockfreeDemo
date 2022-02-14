@@ -3,8 +3,6 @@ project(lockfree_test)
 
 include(CTest)
 
-set(CMAKE_CXX_STANDARD 17) 
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options("-O0")
 
 enable_testing()
@@ -13,17 +11,49 @@ find_package(Threads REQUIRED)
 
 include_directories(.)
 
-add_executable(exchange_buffer_test
+add_executable(
+    exchange_buffer_test
     main.cpp
     exchange_buffer_test.cpp
+)
+
+set_target_properties(
+    exchange_buffer_test
+    PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
+)
+
+target_compile_options(
+    exchange_buffer_test
+    PRIVATE
+         $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
 add_test(NAME exchange_buffer_test COMMAND exchange_buffer_test)
 
 
-add_executable(exchange_buffer_stresstest
+add_executable(
+    exchange_buffer_stresstest
     main.cpp
     exchange_buffer_stresstest.cpp
+)
+
+set_target_properties(
+    exchange_buffer_stresstest
+    PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
+)
+
+target_compile_options(
+    exchange_buffer_stresstest
+    PRIVATE
+         $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
 # Linked to atomic for clang
@@ -37,6 +67,21 @@ add_executable(sync_counter_stresstest
     sync_counter_stresstest.cpp
     ../src/sync_counter.cpp
 #this is not nice but will do for now
+)
+
+set_target_properties(
+    sync_counter_stresstest
+    PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
+)
+
+target_compile_options(
+    sync_counter_stresstest
+    PRIVATE
+         $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
 # Linked to atomic for clang
