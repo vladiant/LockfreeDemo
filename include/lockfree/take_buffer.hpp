@@ -9,8 +9,9 @@
 
 namespace lockfree {
 
-template <class T, uint32_t C = 8> class TakeBuffer {
-private:
+template <class T, uint32_t C = 8>
+class TakeBuffer {
+ private:
   using storage_t = Storage<T, C>;
   using indexpool_t = IndexPool<C>;
 
@@ -22,11 +23,11 @@ private:
   indexpool_t m_indices;
   storage_t m_storage;
 
-public:
+ public:
   bool write(const T &value) {
     auto maybeIndex = m_indices.get();
     if (!maybeIndex) {
-      return false; // no index
+      return false;  // no index
     }
     auto index = maybeIndex.value();
     // will succeed since we the exclusive ownership of index
@@ -42,7 +43,7 @@ public:
   bool try_write(const T &value) {
     auto maybeIndex = m_indices.get();
     if (!maybeIndex) {
-      return false; // no index
+      return false;  // no index
     }
     auto index = maybeIndex.value();
     m_storage.store_at(value, index);
@@ -65,11 +66,11 @@ public:
     return ret;
   }
 
-private:
+ private:
   void free(index_t index) {
     m_storage.free(index);
     m_indices.free(index);
   }
 };
 
-} // namespace lockfree
+}  // namespace lockfree

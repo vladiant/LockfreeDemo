@@ -12,8 +12,9 @@ namespace not_lockfree {
 // NB: not lock-free due to std::optional using dynamic memory
 // a static memory optional can be found e.g. in
 // https://github.com/eclipse-iceoryx/iceoryx/blob/master/iceoryx_hoofs/include/iceoryx_hoofs/cxx/optional.hpp
-template <class T, uint32_t C = 8> class ExchangeBuffer {
-private:
+template <class T, uint32_t C = 8>
+class ExchangeBuffer {
+ private:
   using storage_t = lockfree::Storage<T, C>;
   using indexpool_t = lockfree::IndexPool<C>;
 
@@ -25,11 +26,11 @@ private:
   indexpool_t m_indices;
   storage_t m_storage;
 
-public:
+ public:
   bool write(const T &value) {
     auto maybeIndex = m_indices.get();
     if (!maybeIndex) {
-      return false; // no index
+      return false;  // no index
     }
     auto index = maybeIndex.value();
     // will succeed since we the exclusive ownership of index
@@ -45,7 +46,7 @@ public:
   bool try_write(const T &value) {
     auto maybeIndex = m_indices.get();
     if (!maybeIndex) {
-      return false; // no index
+      return false;  // no index
     }
     auto index = maybeIndex.value();
     m_storage.store_at(value, index);
@@ -93,11 +94,11 @@ public:
 
   bool empty() { return m_index.load() == NO_DATA; }
 
-private:
+ private:
   void free(index_t index) {
     m_storage.free(index);
     m_indices.free(index);
   }
 };
 
-} // namespace not_lockfree
+}  // namespace not_lockfree

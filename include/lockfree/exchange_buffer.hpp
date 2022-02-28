@@ -11,8 +11,9 @@
 
 namespace lockfree {
 
-template <class T, uint32_t C = 8> class ExchangeBuffer {
-private:
+template <class T, uint32_t C = 8>
+class ExchangeBuffer {
+ private:
   using storage_t = Storage<T, C>;
   using indexpool_t = lockfree::IndexPool<C>;
   using index_t = typename indexpool_t::index_t;
@@ -34,11 +35,11 @@ private:
   indexpool_t m_indices;
   storage_t m_storage;
 
-public:
+ public:
   bool write(const T &value) {
     auto maybeIndex = m_indices.get();
     if (!maybeIndex) {
-      return false; // no index
+      return false;  // no index
     }
     tagged_index newIndex{maybeIndex.value()};
     m_storage.store_at(value, newIndex.index);
@@ -59,7 +60,7 @@ public:
   bool try_write(const T &value) {
     auto maybeIndex = m_indices.get();
     if (!maybeIndex) {
-      return false; // no index
+      return false;  // no index
     }
 
     tagged_index newIndex{maybeIndex.value()};
@@ -115,11 +116,11 @@ public:
 
   bool empty() { return m_index.load().index == NO_DATA; }
 
-private:
+ private:
   void free(index_t index) {
     m_storage.free(index);
     m_indices.free(index);
   }
-}; // namespace lockfree
+};  // namespace lockfree
 
-} // namespace lockfree
+}  // namespace lockfree

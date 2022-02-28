@@ -1,13 +1,12 @@
-#include <catch2/catch.hpp>
-
-#include "lockfree/exchange_buffer.hpp"
-
 #include <atomic>
+#include <catch2/catch.hpp>
 #include <chrono>
 #include <iostream>
 #include <numeric>
 #include <thread>
 #include <vector>
+
+#include "lockfree/exchange_buffer.hpp"
 
 namespace {
 
@@ -60,8 +59,8 @@ uint64_t gauss_sum(uint64_t n) { return n * (n + 1) / 2; }
 
 // Using try_write data cannot disappear by being discarded and can only be
 // taken by exactly one thread. We hence can check whether no data is lost.
-TEST_CASE("using_try_write_and_take_we_lose_no_data", "ExchangeBufferStressTest") {
-
+TEST_CASE("using_try_write_and_take_we_lose_no_data",
+          "ExchangeBufferStressTest") {
   Buffer buffer;
   std::vector<uint64_t> maxs(NUM_WRITER_THREADS, 0);
   std::vector<uint64_t> sums(NUM_READER_THREADS, 0);
@@ -165,8 +164,7 @@ void read1(Buffer &buffer, std::atomic<bool> &run, int id, int &ordered,
 // This is actually more interesting for queues (e.g. more than one slot in the
 // buffer).
 TEST_CASE("using_single_writer_write_and_we_read_data_in_ascending_order",
-     "ExchangeBufferStressTest") {
-
+          "ExchangeBufferStressTest") {
   Buffer buffer;
   uint64_t maxWritten;
   std::vector<int> ordered(NUM_READER_THREADS, 1);
@@ -231,8 +229,8 @@ void read2(DataBuffer &buffer, std::atomic<bool> &run, int id, int &ordered,
            uint64_t &max) {
   static_cast<void>(id);
   ordered = 1;
-  max = 0; // could do this also on a per writer basis to evaluate by the test
-           // later
+  max = 0;  // could do this also on a per writer basis to evaluate by the test
+            // later
   std::array<uint64_t, NUM_WRITER_THREADS> prevValue{0};
   while (run) {
     auto result = buffer.read();
@@ -252,8 +250,7 @@ void read2(DataBuffer &buffer, std::atomic<bool> &run, int id, int &ordered,
 // This is more general then the single writer test since it uses multiple
 // concurrent writers.
 TEST_CASE("using_multiple_writers_write_and_we_read_data_in_ascending_order",
-     "ExchangeBufferStressTest") {
-
+          "ExchangeBufferStressTest") {
   DataBuffer buffer;
   std::vector<int> ordered(NUM_READER_THREADS, 1);
   std::vector<uint64_t> maxWritten(NUM_READER_THREADS, 0);
@@ -302,4 +299,4 @@ TEST_CASE("using_multiple_writers_write_and_we_read_data_in_ascending_order",
   }
 }
 
-} // namespace
+}  // namespace

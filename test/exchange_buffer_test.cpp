@@ -1,6 +1,6 @@
-#include <catch2/catch.hpp>
-
 #include "lockfree/exchange_buffer.hpp"
+
+#include <catch2/catch.hpp>
 
 namespace {
 
@@ -10,7 +10,7 @@ namespace {
 using IntBuffer = lockfree::ExchangeBuffer<int>;
 
 class TestExchangeBuffer {
-public:
+ public:
   IntBuffer buffer;
 };
 
@@ -91,4 +91,4 @@ TEST_CASE_METHOD(TestExchangeBuffer, "read_does_not_remove_value") {
   CHECK(*result == 73);
 }
 
-} // namespace
+}  // namespace

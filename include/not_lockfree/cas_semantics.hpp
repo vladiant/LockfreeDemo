@@ -5,11 +5,12 @@
 // CAS semantics
 namespace not_lockfree {
 
-template <class T> class atomic {
+template <class T>
+class atomic {
   std::atomic<T> m_value;
   std::mutex m_mutex;
 
-public:
+ public:
   atomic() = default;
   atomic(const T &value) : m_value(value) {}
 
@@ -31,4 +32,4 @@ public:
   }
 };
 
-} // namespace not_lockfree
+}  // namespace not_lockfree

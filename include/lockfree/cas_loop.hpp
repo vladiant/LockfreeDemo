@@ -36,4 +36,4 @@ int fetch_multiply(std::atomic<int> &value, int multiplier) {
   return oldValue;
 }
 
-} // namespace lockfree
+}  // namespace lockfree

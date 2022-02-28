@@ -5,12 +5,13 @@
 
 namespace lockfree {
 
-template <uint32_t Size> class IndexPool {
-private:
+template <uint32_t Size>
+class IndexPool {
+ private:
   constexpr static uint8_t FREE = 0;
   constexpr static uint8_t USED = 1;
 
-public:
+ public:
   using index_t = uint32_t;
 
   IndexPool() {
@@ -38,10 +39,10 @@ public:
     slot.store(FREE);
   }
 
-private:
+ private:
   std::atomic<uint8_t> m_slots[Size];
-}; // namespace lockfree
-} // namespace lockfree
+};  // namespace lockfree
+}  // namespace lockfree
 
 // note: in practice we would use a much faster and efficient allocator
 //       we can create a constant time lock-free allocator for T objects by

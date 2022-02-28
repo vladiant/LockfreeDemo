@@ -1,6 +1,7 @@
 #pragma once
 
 #include <assert.h>
+
 #include <atomic>
 #include <chrono>
 #include <thread>
@@ -11,7 +12,7 @@ namespace lockfree {
 class SyncCounter {
   static constexpr int N = 1024;
 
-public:
+ public:
   SyncCounter();
 
   // trigger increment of both counters
@@ -26,7 +27,7 @@ public:
   // retrieve both values, sync to ensure they are equal (redundant)
   std::pair<uint64_t, uint64_t> get_if_equal();
 
-private:
+ private:
   using counter_t = std::atomic<uint64_t>;
   // separation of counters by dummy memory
   // to have both counters in different cachelines
@@ -40,4 +41,4 @@ private:
   void sleep(int ms = 1);
 };
 
-} // namespace lockfree
+}  // namespace lockfree

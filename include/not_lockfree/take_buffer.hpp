@@ -5,11 +5,12 @@
 
 namespace not_lockfree {
 
-template <class T> class TakeBuffer {
-private:
+template <class T>
+class TakeBuffer {
+ private:
   std::atomic<T *> m_value{nullptr};
 
-public:
+ public:
   bool write(const T &value) {
     auto copy = new (std::nothrow) T(value);
     if (copy == nullptr) {
@@ -37,4 +38,4 @@ public:
     return std::nullopt;
   }
 };
-} // namespace not_lockfree
+}  // namespace not_lockfree

@@ -2,7 +2,8 @@
 
 #include <optional>
 
-template <class T> class ExchangeBuffer {
+template <class T>
+class ExchangeBuffer {
   /// @brief write new value and discard old value if any
   /// @param value value to be written
   /// @return true if successful false otherwise (leaves buffer unchanged)
