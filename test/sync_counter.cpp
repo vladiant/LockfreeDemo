@@ -1,4 +1,4 @@
-#include "lockfree/sync_counter.hpp"
+#include "sync_counter.hpp"
 
 namespace lockfree {
 

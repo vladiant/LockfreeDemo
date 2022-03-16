@@ -6,7 +6,7 @@
 #include <thread>
 #include <vector>
 
-#include "lockfree/sync_counter.hpp"
+#include "sync_counter.hpp"
 
 namespace {
 

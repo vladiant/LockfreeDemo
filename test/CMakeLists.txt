@@ -65,8 +65,8 @@ add_test(NAME exchange_buffer_stresstest COMMAND exchange_buffer_stresstest)
 add_executable(sync_counter_stresstest
     main.cpp
     sync_counter_stresstest.cpp
-    ../src/sync_counter.cpp
-#this is not nice but will do for now
+    sync_counter.hpp
+    sync_counter.cpp
 )
 
 set_target_properties(
