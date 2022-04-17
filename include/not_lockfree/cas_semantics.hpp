@@ -16,7 +16,7 @@ class atomic {
 
   T load() { return m_value.load(); }
 
-  void store(const T &value) { m_value.store(); }
+  void store(const T &value) { m_value.store(value); }
 
   bool compare_exchange_strong(T &expected, const T &newValue) {
     std::lock_guard<std::mutex> lock(m_mutex);

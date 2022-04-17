@@ -271,7 +271,7 @@ TEST_CASE("using_multiple_writers_write_and_we_read_data_in_ascending_order",
                          std::ref(maxWritten[i]));
   }
 
-  std::thread writer();
+  std::thread writer{};
 
   std::this_thread::sleep_for(runtime);
   run = false;

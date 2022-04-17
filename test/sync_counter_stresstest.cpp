@@ -12,7 +12,6 @@ namespace {
 
 constexpr int NUM_WRITER_THREADS = 8;
 constexpr int NUM_READER_THREADS = 8;
-constexpr int NUM_THREADS = NUM_WRITER_THREADS + NUM_READER_THREADS;
 constexpr std::chrono::seconds runtime(2);
 
 using SyncCounter = lockfree::SyncCounter;
