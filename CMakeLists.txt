@@ -17,7 +17,7 @@ set_target_properties(
 target_compile_options(
     demo
     PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /O2>
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -O3 -Werror>
 )
 
@@ -30,7 +30,7 @@ target_include_directories(
 # Linked to atomic for clang
 target_link_libraries(
     demo
-       -latomic
+       $<$<NOT:$<OR:$<CXX_COMPILER_ID:MSVC>,$<PLATFORM_ID:Darwin>>>:-latomic>
 )
 
 # Tests
@@ -73,7 +73,7 @@ target_compile_options(
 target_link_libraries(
     exchange_buffer_test
     PRIVATE
-        -latomic
+        $<$<NOT:$<OR:$<CXX_COMPILER_ID:MSVC>,$<PLATFORM_ID:Darwin>>>:-latomic>
 )
 
 add_test(NAME exchange_buffer_test COMMAND exchange_buffer_test)
@@ -112,7 +112,7 @@ target_link_libraries(
     exchange_buffer_stresstest
     PRIVATE
         Threads::Threads
-        -latomic
+        $<$<NOT:$<OR:$<CXX_COMPILER_ID:MSVC>,$<PLATFORM_ID:Darwin>>>:-latomic>
 )
 
 add_test(NAME exchange_buffer_stresstest COMMAND exchange_buffer_stresstest)
@@ -153,7 +153,7 @@ target_link_libraries(
     sync_counter_stresstest
     PRIVATE
         Threads::Threads
-        -latomic
+        $<$<NOT:$<OR:$<CXX_COMPILER_ID:MSVC>,$<PLATFORM_ID:Darwin>>>:-latomic>
 )
 
 add_test(NAME sync_counter_stresstest COMMAND sync_counter_stresstest)

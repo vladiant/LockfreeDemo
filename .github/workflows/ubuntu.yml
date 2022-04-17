@@ -1,0 +1,71 @@
+name: Ubuntu build
+
+on: push
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    name: Build with GCC
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create Build Environment     
+      run: cmake -E make_directory ${{github.workspace}}/build
+
+    - name: Configure CMake    
+      shell: bash
+      working-directory: ${{github.workspace}}/build   
+      run: cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Run
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: ./demo
+
+    # - name: Test
+    #   working-directory: ${{github.workspace}}/build
+    #   shell: bash
+    #   run: ctest -C $BUILD_TYPE
+
+  build-clang:
+    name: Build with Clang
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create Build Environment     
+      run: cmake -E make_directory ${{github.workspace}}/build-clang
+
+    - name: Configure CMake    
+      shell: bash
+      working-directory: ${{github.workspace}}/build-clang   
+      run: |
+          cmake .. \
+                -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+                -DCMAKE_C_COMPILER=/usr/bin/clang \
+                -DCMAKE_CXX_COMPILER=/usr/bin/clang++
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build-clang
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Run
+      working-directory: ${{github.workspace}}/build-clang
+      shell: bash
+      run: ./demo
+
+    # - name: Test
+    #   working-directory: ${{github.workspace}}/build-clang
+    #   shell: bash
+    #   run: ctest -C $BUILD_TYPE

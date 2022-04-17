@@ -5,6 +5,7 @@
 #include <numeric>
 #include <thread>
 #include <vector>
+#include <array>
 
 #include "lockfree/exchange_buffer.hpp"
 
@@ -237,7 +238,7 @@ void read2(DataBuffer &buffer, std::atomic<bool> &run, int id, int &ordered,
     if (result.has_value()) {
       Data &data = *result;
       // is it at least as large as the last value from this writer?
-      if (data.value < prevValue[data.id]) {
+      if (data.value < prevValue.at(data.id)) {
         ordered = 0;
       }
       if (max < data.value) {
@@ -270,8 +271,6 @@ TEST_CASE("using_multiple_writers_write_and_we_read_data_in_ascending_order",
     writers.emplace_back(&write2, std::ref(buffer), std::ref(run), i,
                          std::ref(maxWritten[i]));
   }
-
-  std::thread writer{};
 
   std::this_thread::sleep_for(runtime);
   run = false;
