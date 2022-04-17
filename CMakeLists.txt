@@ -17,7 +17,7 @@ set_target_properties(
 target_compile_options(
     demo
     PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /O2>
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -O3 -Werror>
 )
 
