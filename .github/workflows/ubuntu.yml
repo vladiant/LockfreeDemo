@@ -31,10 +31,10 @@ jobs:
       shell: bash
       run: ./demo
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      shell: bash
-      run: ctest -C $BUILD_TYPE
+    # - name: Test
+    #   working-directory: ${{github.workspace}}/build
+    #   shell: bash
+    #   run: ctest -C $BUILD_TYPE
 
   build-clang:
     name: Build with Clang
@@ -65,7 +65,7 @@ jobs:
       shell: bash
       run: ./demo
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build-clang
-      shell: bash
-      run: ctest -C $BUILD_TYPE
+    # - name: Test
+    #   working-directory: ${{github.workspace}}/build-clang
+    #   shell: bash
+    #   run: ctest -C $BUILD_TYPE
