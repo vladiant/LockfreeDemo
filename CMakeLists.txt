@@ -65,7 +65,7 @@ target_include_directories(
 target_compile_options(
     exchange_buffer_test
     PRIVATE
-         $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+         $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /Od>
          $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -O0 -Werror>
 )
 
@@ -96,7 +96,7 @@ set_target_properties(
 target_compile_options(
     exchange_buffer_stresstest
     PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /Od>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -O0 -Werror>
 )
 
@@ -137,7 +137,7 @@ set_target_properties(
 target_compile_options(
     sync_counter_stresstest
     PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /Od>
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -O0 -Werror>
 )
 
