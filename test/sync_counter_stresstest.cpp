@@ -39,6 +39,7 @@ void read(SyncCounter &counter, std::atomic<bool> &run, int, uint64_t &max) {
 
 // Using try_write data cannot disappear by being discarded and can only be
 // taken by exactly one thread. We hence can check whether no data is lost.
+/*
 TEST_CASE("counters_are_always_in_sync_when_read", "SyncCounterStressTest") {
   SyncCounter counter;
   std::vector<uint64_t> incs(NUM_WRITER_THREADS, 0);
@@ -101,5 +102,6 @@ TEST_CASE("counters_are_always_in_sync_when_read", "SyncCounterStressTest") {
     CHECK(finalCount == finalRead);
   }
 }
+*/
 
 }  // namespace
