@@ -29,7 +29,7 @@ jobs:
     - name: Run
       working-directory: ${{github.workspace}}/build
       shell: bash
-      run: ./SampleLibApp
+      run: ./demo
 
     - name: Test
       working-directory: ${{github.workspace}}/build
@@ -63,7 +63,7 @@ jobs:
     - name: Run
       working-directory: ${{github.workspace}}/build-clang
       shell: bash
-      run: ./SampleLibApp
+      run: ./demo
 
     - name: Test
       working-directory: ${{github.workspace}}/build-clang
