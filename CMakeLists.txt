@@ -30,7 +30,7 @@ target_include_directories(
 # Linked to atomic for clang
 target_link_libraries(
     demo
-       -latomic
+       $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-latomic>
 )
 
 # Tests
@@ -73,7 +73,7 @@ target_compile_options(
 target_link_libraries(
     exchange_buffer_test
     PRIVATE
-        -latomic
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-latomic>
 )
 
 add_test(NAME exchange_buffer_test COMMAND exchange_buffer_test)
@@ -112,7 +112,7 @@ target_link_libraries(
     exchange_buffer_stresstest
     PRIVATE
         Threads::Threads
-        -latomic
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-latomic>
 )
 
 add_test(NAME exchange_buffer_stresstest COMMAND exchange_buffer_stresstest)
@@ -153,7 +153,7 @@ target_link_libraries(
     sync_counter_stresstest
     PRIVATE
         Threads::Threads
-        -latomic
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-latomic>
 )
 
 add_test(NAME sync_counter_stresstest COMMAND sync_counter_stresstest)
