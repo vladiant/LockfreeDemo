@@ -2,6 +2,7 @@
 
 #include <assert.h>
 
+#include <array>
 #include <atomic>
 #include <chrono>
 #include <thread>
@@ -31,7 +32,7 @@ class SyncCounter {
   using counter_t = std::atomic<uint64_t>;
   // separation of counters by dummy memory
   // to have both counters in different cachelines
-  counter_t m_counters[4096];
+  std::array<counter_t, 4096> m_counters;
 
   counter_t &m_count1;
   counter_t &m_count2;
