@@ -32,7 +32,7 @@ class SyncCounter {
   using counter_t = std::atomic<uint64_t>;
   // separation of counters by dummy memory
   // to have both counters in different cachelines
-  std::array<counter_t, 4096> m_counters;
+  std::array<counter_t, 4096> m_counters{};
 
   counter_t &m_count1;
   counter_t &m_count2;
