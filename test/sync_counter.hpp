@@ -39,7 +39,7 @@ class SyncCounter {
 
   void try_help(uint64_t &count1, uint64_t &count2);
 
-  void sleep(int ms = 1);
+  static void sleep(int ms = 1);
 };
 
 }  // namespace lockfree
