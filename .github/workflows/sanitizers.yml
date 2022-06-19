@@ -64,10 +64,10 @@ jobs:
       shell: bash
       run: ./demo
 
-   - name: Test
-     working-directory: ${{github.workspace}}/build-clang-msan
-     shell: bash
-     run: ctest -VV --progress
+    - name: Test
+      working-directory: ${{github.workspace}}/build-clang-msan
+      shell: bash
+      run: ctest -VV --progress
 
   build-thread-sanitizer:
     name: Thread Sanitizer
