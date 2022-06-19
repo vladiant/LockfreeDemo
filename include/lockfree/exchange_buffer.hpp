@@ -24,7 +24,7 @@ class ExchangeBuffer {
     tagged_index(index_t index) : index(index) {}
     tagged_index(index_t index, uint32_t counter)
         : index(index), counter(counter) {}
-    index_t index;
+    index_t index{};
     uint32_t counter{0};
   };
 
