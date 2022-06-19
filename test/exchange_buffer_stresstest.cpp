@@ -167,7 +167,7 @@ void read1(Buffer &buffer, std::atomic<bool> &run, int id, int &ordered,
 TEST_CASE("using_single_writer_write_and_we_read_data_in_ascending_order",
           "ExchangeBufferStressTest") {
   Buffer buffer;
-  uint64_t maxWritten;
+  uint64_t maxWritten{};
   std::vector<int> ordered(NUM_READER_THREADS, 1);
   std::vector<uint64_t> maxs(NUM_READER_THREADS, 0);
   std::vector<std::thread> readers;

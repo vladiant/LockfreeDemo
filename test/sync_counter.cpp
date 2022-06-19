@@ -58,28 +58,6 @@ void SyncCounter::increment() {
   // we do not care for the result of CAS (either it worked because we
   // incremented or someone else did it for us and then we do not need to retry)
 }
-#if 0
-// uncommented version
-void SyncCounter::increment() {
-  uint64_t count1, count2;
-
-  do {
-    count1 = m_count1.load();
-    count2 = m_count2.load();
-
-    while (count1 != count2) {
-      try_help(count1, count2);
-    }
-
-    if (m_count1.compare_exchange_strong(count1, count1 + 1)) {
-      break;
-    }
-  } while (true);
-
-  sleep();
-  m_count2.compare_exchange_strong(count2, count1 + 1);
-}
-#endif
 
 void SyncCounter::unsynced_increment() {
   ++m_count1;
@@ -100,7 +78,7 @@ uint64_t SyncCounter::sync() {
 
 std::pair<uint64_t, uint64_t> SyncCounter::get_if_equal() {
   uint64_t count1 = m_count1.load();
-  uint64_t count2;
+  uint64_t count2{};
   do {
     count2 = m_count2.load();
   } while (!m_count1.compare_exchange_strong(count1, count1));
