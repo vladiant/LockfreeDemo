@@ -1,3 +1,4 @@
+#include <array>
 #include <atomic>
 #include <catch2/catch.hpp>
 #include <chrono>
@@ -5,7 +6,6 @@
 #include <numeric>
 #include <thread>
 #include <vector>
-#include <array>
 
 #include "lockfree/exchange_buffer.hpp"
 
