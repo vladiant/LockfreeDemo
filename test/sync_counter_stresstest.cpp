@@ -16,23 +16,26 @@ constexpr std::chrono::seconds runtime(2);
 
 using SyncCounter = lockfree::SyncCounter;
 
-void increment(SyncCounter &counter, std::atomic<bool> &run, int,
-               uint64_t &numIncs) {
-  numIncs = 0;
-  while (run) {
+std::atomic_bool runReaders{true};
+std::atomic_bool runWriters{true};
+SyncCounter counter;
+
+void increment(int, uint64_t *numIncs) {
+  *numIncs = 0;
+  while (runWriters) {
     // unsycned increment is actually also ok as long as we read synced
     // counter.unsynced_increment();
     counter.increment();
-    ++numIncs;
+    ++(*numIncs);
   }
 }
 
-void read(SyncCounter &counter, std::atomic<bool> &run, int, uint64_t &max) {
-  max = 0;
-  while (run) {
+void read(int, uint64_t *max) {
+  *max = 0;
+  while (runReaders) {
     auto value = counter.sync();
-    if (value > max) {
-      max = value;
+    if (value > *max) {
+      *max = value;
     }
   }
 }
@@ -40,7 +43,6 @@ void read(SyncCounter &counter, std::atomic<bool> &run, int, uint64_t &max) {
 // Using try_write data cannot disappear by being discarded and can only be
 // taken by exactly one thread. We hence can check whether no data is lost.
 TEST_CASE("counters_are_always_in_sync_when_read", "SyncCounterStressTest") {
-  SyncCounter counter;
   std::vector<uint64_t> incs(NUM_WRITER_THREADS, 0);
   std::vector<uint64_t> maxRead(NUM_READER_THREADS, 1);
   std::vector<std::thread> writers;
@@ -48,17 +50,12 @@ TEST_CASE("counters_are_always_in_sync_when_read", "SyncCounterStressTest") {
   writers.reserve(NUM_WRITER_THREADS);
   readers.reserve(NUM_READER_THREADS);
 
-  std::atomic<bool> runReaders{true};
-  std::atomic<bool> runWriters{true};
-
   for (int i = 0; i < NUM_READER_THREADS; ++i) {
-    readers.emplace_back(&read, std::ref(counter), std::ref(runReaders), i,
-                         std::ref(maxRead[i]));
+    readers.emplace_back(&read, i, &maxRead[i]);
   }
 
   for (int i = 0; i < NUM_WRITER_THREADS; ++i) {
-    writers.emplace_back(&increment, std::ref(counter), std::ref(runWriters), i,
-                         std::ref(incs[i]));
+    writers.emplace_back(&increment, i, &incs[i]);
   }
 
   std::this_thread::sleep_for(runtime);

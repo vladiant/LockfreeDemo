@@ -5,6 +5,7 @@
 #include <array>
 #include <atomic>
 #include <chrono>
+#include <mutex>
 #include <thread>
 
 namespace lockfree {
@@ -38,6 +39,8 @@ class SyncCounter {
   counter_t &m_count2;
 
   void try_help(uint64_t &count1, uint64_t &count2);
+
+  std::mutex m_guard;
 
   static void sleep(int ms = 1);
 };

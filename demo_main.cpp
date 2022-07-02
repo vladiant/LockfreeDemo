@@ -16,7 +16,8 @@ using namespace std;
 
 void end_case() { cout << "\n*********************" << endl; }
 
-template <typename Buffer> void write_take() {
+template <typename Buffer>
+void write_take() {
   cout << "WRITE - TAKE" << endl;
   Buffer b;
 
@@ -56,7 +57,8 @@ template <typename Buffer> void write_take() {
   }
 }
 
-template <typename Buffer> void try_write_take() {
+template <typename Buffer>
+void try_write_take() {
   cout << "TRY_WRITE - TAKE" << endl;
   Buffer b;
 
@@ -98,10 +100,10 @@ template <typename Buffer> void try_write_take() {
 
 void cas_loop() {
   cout << "CAS LOOP" << endl;
-  std::atomic<int> a{3};  
+  std::atomic<int> a{3};
   cout << "a = " << a.load() << endl;
   auto prev = lf::fetch_multiply(a, 4);
-  cout << "fetch_mutliply(a, 3) returns " << prev << endl; 
+  cout << "fetch_mutliply(a, 3) returns " << prev << endl;
   cout << "a = " << a.load() << endl;
 }
 
@@ -118,7 +120,8 @@ void cas_semantics() {
   cout << "a = " << a.load() << endl;
 }
 
-template <typename Buffer> void write_read() {
+template <typename Buffer>
+void write_read() {
   cout << "WRITE - READ" << endl;
   Buffer b;
 
@@ -190,7 +193,6 @@ int main(int, char **) {
 
   write_read<lf::ExchangeBuffer<int>>();
   end_case();
-
 
   return EXIT_SUCCESS;
 }
