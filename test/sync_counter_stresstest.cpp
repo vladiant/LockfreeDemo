@@ -73,7 +73,7 @@ TEST_CASE("counters_are_always_in_sync_when_read", "SyncCounterStressTest") {
   // This is brittle but used to check whether all readers arrive at the same
   // counter once the increments stop To do this properly we would need state
   // information (that the increments stopped).
-  std::this_thread::sleep_for(std::chrono::seconds(1));
+  std::this_thread::sleep_for(std::chrono::seconds(runtime));
 
   for (auto &reader : readers) {
     reader.join();

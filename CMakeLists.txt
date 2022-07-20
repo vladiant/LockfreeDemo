@@ -156,8 +156,7 @@ target_link_libraries(
         $<$<NOT:$<OR:$<CXX_COMPILER_ID:MSVC>,$<PLATFORM_ID:Darwin>>>:-latomic>
 )
 
-# TODO: Fix test
-# add_test(NAME sync_counter_stresstest COMMAND sync_counter_stresstest)
+add_test(NAME sync_counter_stresstest COMMAND sync_counter_stresstest)
 
 # Test coverage
 find_program(GCOV_PATH gcov)
