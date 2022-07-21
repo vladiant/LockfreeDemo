@@ -16,11 +16,9 @@ constexpr std::chrono::seconds runtime(2);
 
 using SyncCounter = lockfree::SyncCounter;
 
-std::mutex inc_guard;
-
 void increment(SyncCounter &counter, std::atomic<bool> &run, int,
                uint64_t &numIncs) {
-  std::lock_guard lock{inc_guard};
+  std::atomic_thread_fence(std::memory_order_acquire);
   numIncs = 0;
   while (run) {
     // unsycned increment is actually also ok as long as we read synced
@@ -31,6 +29,7 @@ void increment(SyncCounter &counter, std::atomic<bool> &run, int,
 }
 
 void read(SyncCounter &counter, std::atomic<bool> &run, int, uint64_t &max) {
+  std::atomic_thread_fence(std::memory_order_acquire);
   max = 0;
   while (run) {
     auto value = counter.sync();

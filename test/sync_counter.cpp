@@ -9,7 +9,7 @@ SyncCounter::SyncCounter()
 }
 
 void SyncCounter::increment() {
-  const std::lock_guard lock{m_guard};
+  std::atomic_thread_fence(std::memory_order_acquire);
   uint64_t count1 = m_count1.load();
   uint64_t count2 = m_count2.load();
 
@@ -61,14 +61,14 @@ void SyncCounter::increment() {
 }
 
 void SyncCounter::unsynced_increment() {
-  const std::lock_guard lock{m_guard};
+  std::atomic_thread_fence(std::memory_order_acquire);
   ++m_count1;
   sleep();
   ++m_count2;
 }
 
 uint64_t SyncCounter::sync() {
-  const std::lock_guard lock{m_guard};
+  std::atomic_thread_fence(std::memory_order_acquire);
   uint64_t count1 = m_count1.load();
   uint64_t count2 = m_count2.load();
   while (count1 != count2) {
@@ -80,7 +80,7 @@ uint64_t SyncCounter::sync() {
 }
 
 std::pair<uint64_t, uint64_t> SyncCounter::get_if_equal() {
-  const std::lock_guard lock{m_guard};
+  std::atomic_thread_fence(std::memory_order_acquire);
   uint64_t count1 = m_count1.load();
   uint64_t count2{};
   do {
