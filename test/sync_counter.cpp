@@ -6,7 +6,6 @@ SyncCounter::SyncCounter()
     : m_count1(m_counters[0]), m_count2(m_counters[N - 1]) {
   m_count1 = 0;
   m_count2 = 0;
-  std::atomic_thread_fence(std::memory_order_acquire);
 }
 
 void SyncCounter::increment() {
