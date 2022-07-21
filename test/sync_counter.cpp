@@ -80,7 +80,7 @@ uint64_t SyncCounter::sync() {
 }
 
 std::pair<uint64_t, uint64_t> SyncCounter::get_if_equal() {
-  std::lock_guard lock{m_guard};
+  const std::lock_guard lock{m_guard};
   uint64_t count1 = m_count1.load();
   uint64_t count2{};
   do {
