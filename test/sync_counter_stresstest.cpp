@@ -52,6 +52,7 @@ TEST_CASE("counters_are_always_in_sync_when_read", "SyncCounterStressTest") {
 
   std::atomic<bool> runReaders{true};
   std::atomic<bool> runWriters{true};
+  std::atomic_thread_fence(std::memory_order_acquire);
 
   for (int i = 0; i < NUM_READER_THREADS; ++i) {
     readers.emplace_back(&read, std::ref(counter), std::ref(runReaders), i,
