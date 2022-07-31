@@ -17,9 +17,9 @@ class TakeBuffer {
 
   using index_t = typename indexpool_t::index_t;
 
-  static constexpr index_t NO_DATA = C;
+  static constexpr index_t kNoData = C;
 
-  std::atomic<index_t> m_index{NO_DATA};
+  std::atomic<index_t> m_index{kNoData};
   indexpool_t m_indices;
   storage_t m_storage;
 
@@ -34,7 +34,7 @@ class TakeBuffer {
     m_storage.store_at(value, index);
 
     auto oldIndex = m_index.exchange(index);
-    if (oldIndex != NO_DATA) {
+    if (oldIndex != kNoData) {
       free(oldIndex);
     }
     return true;
@@ -48,7 +48,7 @@ class TakeBuffer {
     auto index = maybeIndex.value();
     m_storage.store_at(value, index);
 
-    index_t expected = NO_DATA;
+    index_t expected = kNoData;
     if (!m_index.compare_exchange_strong(expected, index)) {
       free(index);
       return false;
@@ -57,8 +57,8 @@ class TakeBuffer {
   }
 
   std::optional<T> take() {
-    auto index = m_index.exchange(NO_DATA);
-    if (index == NO_DATA) {
+    auto index = m_index.exchange(kNoData);
+    if (index == kNoData) {
       return std::nullopt;
     }
     auto ret = std::optional<T>(std::move(m_storage[index]));

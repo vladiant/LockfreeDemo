@@ -1,3 +1,3 @@
-#define CATCH_CONFIG_MAIN
+#include <utest/utest.h>
 
-#include <catch2/catch.hpp>
+UTEST_MAIN()
