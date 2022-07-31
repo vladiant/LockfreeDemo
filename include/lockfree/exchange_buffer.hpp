@@ -21,17 +21,14 @@ class ExchangeBuffer {
   static constexpr index_t kNoData = C;
 
   struct tagged_index {
-    tagged_index(index_t index) : index(index) {}
-    tagged_index(index_t index, uint32_t counter)
-        : index(index), counter(counter) {}
     index_t index{};
-    uint32_t counter{0};
+    uint32_t counter{};
   };
 
   static_assert(std::atomic<tagged_index>::is_always_lock_free);
   static_assert(std::is_trivially_copyable<T>::value);
 
-  std::atomic<tagged_index> m_index{kNoData};
+  std::atomic<tagged_index> m_index{{kNoData, 0}};
   indexpool_t m_indices;
   storage_t m_storage;
 
@@ -82,7 +79,7 @@ class ExchangeBuffer {
   std::optional<T> take() {
     // we basically write no data to the buffer
     // and return its content (if any)
-    tagged_index newIndex(kNoData);
+    tagged_index newIndex{kNoData,0};
     auto old = m_index.load();
 
     while (old.index != kNoData) {

@@ -81,8 +81,6 @@ UTEST(counters_are_always_in_sync_when_read, SyncCounterStressTest) {
 
   auto finalCount = counter.sync();
 
-  std::cout << "final counter " << finalCount << std::endl;
-
   // final counter is equal to number of increments
   EXPECT_EQ(finalCount, totalIncs);
 
@@ -95,7 +93,6 @@ UTEST(counters_are_always_in_sync_when_read, SyncCounterStressTest) {
 
   // all readers agree on the final value
   for (auto &finalRead : maxRead) {
-    std::cout << "final read " << finalRead << std::endl;
     EXPECT_EQ(finalCount, finalRead);
   }
 }
