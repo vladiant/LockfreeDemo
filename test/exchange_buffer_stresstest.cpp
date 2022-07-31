@@ -287,7 +287,7 @@ UTEST(using_multiple_writers_write_and_we_read_data_in_ascending_order,
   // regardless since it is just performed at the end
   uint64_t maxW = std::accumulate(
       maxWritten.begin() + 1, maxWritten.end(), maxWritten.front(),
-      [](uint64_t a, uint64_t b) { return std::max(a, b); });
+      [](uint64_t a, uint64_t b) { return (std::max)(a, b); });
 
   for (auto maxR : maxRead) {
     EXPECT_LE(maxR, maxW);
