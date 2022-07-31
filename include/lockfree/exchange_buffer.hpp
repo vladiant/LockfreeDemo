@@ -18,7 +18,7 @@ class ExchangeBuffer {
   using indexpool_t = lockfree::IndexPool<C>;
   using index_t = typename indexpool_t::index_t;
 
-  static constexpr index_t NO_DATA = C;
+  static constexpr index_t kNoData = C;
 
   struct tagged_index {
     tagged_index(index_t index) : index(index) {}
@@ -31,7 +31,7 @@ class ExchangeBuffer {
   static_assert(std::atomic<tagged_index>::is_always_lock_free);
   static_assert(std::is_trivially_copyable<T>::value);
 
-  std::atomic<tagged_index> m_index{NO_DATA};
+  std::atomic<tagged_index> m_index{kNoData};
   indexpool_t m_indices;
   storage_t m_storage;
 
@@ -48,7 +48,7 @@ class ExchangeBuffer {
     do {
       newIndex.counter = old.counter + 1;
       if (m_index.compare_exchange_strong(old, newIndex)) {
-        if (old.index != NO_DATA) {
+        if (old.index != kNoData) {
           free(old.index);
         }
         return true;
@@ -68,7 +68,7 @@ class ExchangeBuffer {
     m_storage.store_at(value, newIndex.index);
 
     tagged_index old = m_index.load();
-    while (old.index == NO_DATA) {
+    while (old.index == kNoData) {
       newIndex.counter = old.counter + 1;
       if (m_index.compare_exchange_strong(old, newIndex)) {
         return true;
@@ -82,10 +82,10 @@ class ExchangeBuffer {
   std::optional<T> take() {
     // we basically write no data to the buffer
     // and return its content (if any)
-    tagged_index newIndex(NO_DATA);
+    tagged_index newIndex(kNoData);
     auto old = m_index.load();
 
-    while (old.index != NO_DATA) {
+    while (old.index != kNoData) {
       newIndex.counter = old.counter + 1;
       if (m_index.compare_exchange_strong(old, newIndex)) {
         // we know there was data due to the while loop condition
@@ -93,7 +93,7 @@ class ExchangeBuffer {
         free(old.index);
         return ret;
       }
-      // either retry or exit loop if there is NO_DATA
+      // either retry or exit loop if there is kNoData
     };
 
     return std::nullopt;
@@ -101,7 +101,7 @@ class ExchangeBuffer {
 
   std::optional<T> read() {
     auto old = m_index.load();
-    while (old.index != NO_DATA) {
+    while (old.index != kNoData) {
       auto ret = std::optional<T>(m_storage[old.index]);
 
       if (m_index.compare_exchange_strong(old, old)) {
@@ -114,7 +114,7 @@ class ExchangeBuffer {
     return std::nullopt;
   }
 
-  bool empty() { return m_index.load().index == NO_DATA; }
+  bool empty() { return m_index.load().index == kNoData; }
 
  private:
   void free(index_t index) {

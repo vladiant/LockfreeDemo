@@ -1,5 +1,6 @@
+#include <utest/utest.h>
+
 #include <atomic>
-#include <catch2/catch.hpp>
 #include <chrono>
 #include <iostream>
 #include <numeric>
@@ -39,7 +40,7 @@ void read(SyncCounter &counter, std::atomic<bool> &run, int, uint64_t &max) {
 
 // Using try_write data cannot disappear by being discarded and can only be
 // taken by exactly one thread. We hence can check whether no data is lost.
-TEST_CASE("counters_are_always_in_sync_when_read", "SyncCounterStressTest") {
+UTEST(counters_are_always_in_sync_when_read, SyncCounterStressTest) {
   SyncCounter counter;
   std::vector<uint64_t> incs(NUM_WRITER_THREADS, 0);
   std::vector<uint64_t> maxRead(NUM_READER_THREADS, 1);
@@ -86,19 +87,19 @@ TEST_CASE("counters_are_always_in_sync_when_read", "SyncCounterStressTest") {
   std::cout << "final counter " << finalCount << std::endl;
 
   // final counter is equal to number of increments
-  CHECK(finalCount == totalIncs);
+  EXPECT_EQ(finalCount, totalIncs);
 
   // another sync should not change it
   finalCount = counter.sync();
-  CHECK(finalCount == totalIncs);
+  EXPECT_EQ(finalCount, totalIncs);
 
   auto values = counter.get_if_equal();
-  CHECK(values.first == values.second);
+  EXPECT_EQ(values.first, values.second);
 
   // all readers agree on the final value
   for (auto &finalRead : maxRead) {
     std::cout << "final read " << finalRead << std::endl;
-    CHECK(finalCount == finalRead);
+    EXPECT_EQ(finalCount, finalRead);
   }
 }
 
