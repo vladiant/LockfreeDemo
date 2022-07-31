@@ -227,7 +227,7 @@ if (LCOV_PATH AND GCOV_PATH)
         COMMAND ${LCOV_PATH} --remove ${covname}.info
                              '${CMAKE_SOURCE_DIR}/lib/include/*'
                              '${CMAKE_SOURCE_DIR}/test/*'
-                             '${CMAKE_SOURCE_DIR}/catch2/*'
+                             '${CMAKE_SOURCE_DIR}/utest/*'
                              '${CMAKE_SOURCE_DIR}/fakeit/*'
                              '/usr/*'
                              --output-file ${covname}.info.cleaned

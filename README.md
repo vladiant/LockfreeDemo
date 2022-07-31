@@ -12,12 +12,11 @@
 * <https://github.com/MatthiasKillat/lockfree_demo>
 
 ## Changes
-* Switched to standalone Catch2 test framework
+* Switched to standalone utest test framework
 * Updated CMake system
 
 ## Test frameworks
 
 ### Catch2
-* https://github.com/catchorg/Catch2
-* commit de6fe184a9ac1a06895cdd1c9b437f0a0bdf14ad
-* v2.13.4
+* https://github.com/sheredom/utest.h
+* commit 54458e248f875f1a51f0af8bec8ca6ae7761b9d1

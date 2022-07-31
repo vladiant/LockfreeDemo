@@ -1,6 +1,7 @@
+#include <utest/utest.h>
+
 #include <array>
 #include <atomic>
-#include <catch2/catch.hpp>
 #include <chrono>
 #include <iostream>
 #include <numeric>
@@ -60,8 +61,7 @@ uint64_t gauss_sum(uint64_t n) { return n * (n + 1) / 2; }
 
 // Using try_write data cannot disappear by being discarded and can only be
 // taken by exactly one thread. We hence can check whether no data is lost.
-TEST_CASE("using_try_write_and_take_we_lose_no_data",
-          "ExchangeBufferStressTest") {
+UTEST(using_try_write_and_take_we_lose_no_data, ExchangeBufferStressTest) {
   Buffer buffer;
   std::vector<uint64_t> maxs(NUM_WRITER_THREADS, 0);
   std::vector<uint64_t> sums(NUM_READER_THREADS, 0);
@@ -112,7 +112,7 @@ TEST_CASE("using_try_write_and_take_we_lose_no_data",
   // By just keeping track of the sum We avoid memorizing what
   // data we have already seen (requires synchronization across threads or large
   // containers to store data received per thread)
-  CHECK(expectedSum == sum);
+  EXPECT_EQ(expectedSum, sum);
 }
 
 void write1(Buffer &buffer, std::atomic<bool> &run, int id, uint64_t &max) {
@@ -164,8 +164,8 @@ void read1(Buffer &buffer, std::atomic<bool> &run, int id, int &ordered,
 //
 // This is actually more interesting for queues (e.g. more than one slot in the
 // buffer).
-TEST_CASE("using_single_writer_write_and_we_read_data_in_ascending_order",
-          "ExchangeBufferStressTest") {
+UTEST(using_single_writer_write_and_we_read_data_in_ascending_order,
+      ExchangeBufferStressTest) {
   Buffer buffer;
   uint64_t maxWritten{};
   std::vector<int> ordered(NUM_READER_THREADS, 1);
@@ -197,11 +197,11 @@ TEST_CASE("using_single_writer_write_and_we_read_data_in_ascending_order",
   // in the test (in addition to sync of the // Buffer itself).
   for (auto maxRead : maxs) {
     std::cout << maxRead << std::endl;
-    CHECK(maxRead <= maxWritten);
+    EXPECT_LE(maxRead, maxWritten);
   }
 
   for (auto orderedRead : ordered) {
-    CHECK(orderedRead == 1);
+    EXPECT_EQ(orderedRead, 1);
   }
 }
 
@@ -250,8 +250,8 @@ void read2(DataBuffer &buffer, std::atomic<bool> &run, int id, int &ordered,
 
 // This is more general then the single writer test since it uses multiple
 // concurrent writers.
-TEST_CASE("using_multiple_writers_write_and_we_read_data_in_ascending_order",
-          "ExchangeBufferStressTest") {
+UTEST(using_multiple_writers_write_and_we_read_data_in_ascending_order,
+      ExchangeBufferStressTest) {
   DataBuffer buffer;
   std::vector<int> ordered(NUM_READER_THREADS, 1);
   std::vector<uint64_t> maxWritten(NUM_READER_THREADS, 0);
@@ -287,14 +287,14 @@ TEST_CASE("using_multiple_writers_write_and_we_read_data_in_ascending_order",
   // regardless since it is just performed at the end
   uint64_t maxW = std::accumulate(
       maxWritten.begin() + 1, maxWritten.end(), maxWritten.front(),
-      [](uint64_t a, uint64_t b) { return std::max(a, b); });
+      [](uint64_t a, uint64_t b) { return (std::max)(a, b); });
 
   for (auto maxR : maxRead) {
-    CHECK(maxR <= maxW);
+    EXPECT_LE(maxR, maxW);
   }
 
   for (auto orderedRead : ordered) {
-    CHECK(orderedRead == 1);
+    EXPECT_EQ(orderedRead, 1);
   }
 }
 

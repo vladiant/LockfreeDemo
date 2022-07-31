@@ -20,9 +20,9 @@ class ExchangeBuffer {
 
   using index_t = typename indexpool_t::index_t;
 
-  static constexpr index_t NO_DATA = C;
+  static constexpr index_t kNoData = C;
 
-  std::atomic<index_t> m_index{NO_DATA};
+  std::atomic<index_t> m_index{kNoData};
   indexpool_t m_indices;
   storage_t m_storage;
 
@@ -37,7 +37,7 @@ class ExchangeBuffer {
     m_storage.store_at(value, index);
 
     auto oldIndex = m_index.exchange(index);
-    if (oldIndex != NO_DATA) {
+    if (oldIndex != kNoData) {
       free(oldIndex);
     }
     return true;
@@ -51,7 +51,7 @@ class ExchangeBuffer {
     auto index = maybeIndex.value();
     m_storage.store_at(value, index);
 
-    index_t expected = NO_DATA;
+    index_t expected = kNoData;
     if (!m_index.compare_exchange_strong(expected, index)) {
       free(index);
       return false;
@@ -60,8 +60,8 @@ class ExchangeBuffer {
   }
 
   std::optional<T> take() {
-    auto index = m_index.exchange(NO_DATA);
-    if (index == NO_DATA) {
+    auto index = m_index.exchange(kNoData);
+    if (index == kNoData) {
       return std::nullopt;
     }
     auto ret = std::optional<T>(std::move(m_storage[index]));
@@ -71,7 +71,7 @@ class ExchangeBuffer {
 
   std::optional<T> read1() {
     auto index = m_index.load();
-    if (index == NO_DATA) {
+    if (index == kNoData) {
       return std::nullopt;
     }
     // cannot read while it could change concurrently
@@ -82,7 +82,7 @@ class ExchangeBuffer {
   std::optional<T> read() {
     auto index = m_index.load();
 
-    while (index != NO_DATA) {
+    while (index != kNoData) {
       auto ret = std::optional<T>(m_storage[index]);
 
       if (m_index.compare_exchange_strong(index, index)) {
@@ -92,7 +92,7 @@ class ExchangeBuffer {
     return std::nullopt;
   }
 
-  bool empty() { return m_index.load() == NO_DATA; }
+  bool empty() { return m_index.load() == kNoData; }
 
  private:
   void free(index_t index) {
